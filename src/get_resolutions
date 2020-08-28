@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DIR=`dirname "$0"`
+DIR=`exec 2>/dev/null;(cd -- "$DIR") && cd -- "$DIR"|| cd "$DIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
+source "$DIR/../common/for-each-file"
+
+_get_resolution() {
+	CONTENT="$(ffprobe -v error -of flat=s=_ -select_streams v:0 -show_entries stream=height,width "$1" 2> /dev/null)"
+	eval $(echo $CONTENT | grep -E '(streams_stream_0_width|streams_stream_0_height)')
+	if [ "${streams_stream_0_width}x" != "x" ] && [ "${streams_stream_0_height}x" != "x" ]; then
+		echo "$(basename "$1") - ${streams_stream_0_width}x${streams_stream_0_height}"
+	fi
+	streams_stream_0_width=
+	streams_stream_0_height=
+}
+
+for_each_file _get_resolution "$@"

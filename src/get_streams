@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DIR=`dirname "$0"`
+DIR=`exec 2>/dev/null;(cd -- "$DIR") && cd -- "$DIR"|| cd "$DIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
+source "$DIR/../common/for-each-file"
+
+_get_stream() {
+	basename "$1"
+	ffmpeg -i "$1" 2>&1 | grep "Stream"
+	echo
+}
+
+for_each_file _get_stream "$@"

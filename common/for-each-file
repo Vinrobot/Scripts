@@ -1,0 +1,19 @@
+#!/bin/sh
+
+for_each_file() {
+	local CMD="$1"
+	shift
+	for arg in "$@"; do
+		if [ -f "$arg" ]; then
+			"$CMD" "$arg"
+		elif [ -d "$arg" ]; then
+			for f in "$arg"/*; do
+				if [ -f "$f" ]; then
+					"$CMD" "$f"
+				fi
+			done
+		else
+			echo "File $arg not found" >&2
+		fi
+	done
+}

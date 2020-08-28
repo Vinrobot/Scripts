@@ -1,0 +1,15 @@
+#!/bin/sh
+
+DIR=`dirname "$0"`
+DIR=`exec 2>/dev/null;(cd -- "$DIR") && cd -- "$DIR"|| cd "$DIR"; unset PWD; /usr/bin/pwd || /bin/pwd || pwd`
+source "$DIR/../common/for-each-file"
+
+_get_duration() {
+	# DURATION=$(ffprobe -i "$1" -show_format -sexagesimal -v quiet | sed -n 's/duration=//p')
+	DURATION=$(ffmpeg -hide_banner -i "$1" 2>&1 | grep Duration | sed 's/\(.*\)Duration: \(.*\), [start$]\(.*\)/\2/g')
+	if [ "${DURATION}x" != "x" ]; then
+		echo "$1 - ${DURATION} (HH:MM:SS.MS)"
+	fi
+}
+
+for_each_file _get_duration "$@"
