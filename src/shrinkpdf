@@ -74,10 +74,11 @@ usage ()
 {
 	echo "Reduces PDF filesize by lossy recompressing with Ghostscript."
 	echo "Not guaranteed to succeed, but usually works."
-	echo "  Usage: $1 infile [outfile] [resolution_in_dpi]"
+	echo "  Usage: $1 infile outfile [resolution_in_dpi]"
 }
 
 IFILE="$1"
+OFILE="$2"
 
 # Need an input file:
 if [ -z "$IFILE" ]; then
@@ -85,14 +86,13 @@ if [ -z "$IFILE" ]; then
 	exit 1
 fi
 
-# Output filename defaults to "-" (stdout) unless given:
-if [ ! -z "$2" ]; then
-	OFILE="$2"
-else
-	OFILE="-"
+# Need an output file:
+if [ -z "$OFILE" ]; then
+	usage "$0"
+	exit 1
 fi
 
-# Output resolution defaults to 72 unless given:
+# Output resolution defaults to 90 unless given:
 if [ ! -z "$3" ]; then
 	res="$3"
 else
