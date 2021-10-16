@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ x"${1}" == x'-h' ]; then
+	IMAGE="${2}"
+
+	# From https://unix.stackexchange.com/a/506221
+	docker manifest inspect -v "${IMAGE}" | grep size | awk -F ':' '{sum+=$NF} END {print sum}' | numfmt --to=iec-i
+else
+	IMAGE="${1}"
+
+	docker manifest inspect -v "${IMAGE}" | grep size | awk -F ':' '{sum+=$NF} END {print sum}'
+fi
