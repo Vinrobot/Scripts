@@ -22,7 +22,8 @@ test -z "$CORRECT_NAME" && print_missing "the new name to set"
 OLD_EMAIL="$OLD_EMAIL" \
 CORRECT_EMAIL="$CORRECT_EMAIL" \
 CORRECT_NAME="$CORRECT_NAME" \
-git filter-branch --env-filter '
+FILTER_BRANCH_SQUELCH_WARNING=1 \
+git filter-branch -f --env-filter '
 if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]; then
     export GIT_COMMITTER_NAME="$CORRECT_NAME"
     export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
